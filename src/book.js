@@ -197,8 +197,20 @@ EPUBJS.Book.prototype.unpack = function(containerPath){
 
 				 //-- Adjust setting based on metadata				 
 
-				 //-- Load the TOC, optional
-				 if(contents.tocPath) {
+				 //-- Load the TOC, optional; either the EPUB3 XHTML Navigation file or the EPUB2 NCX file
+         if(contents.navPath) {
+
+           book.settings.navUrl = book.settings.contentsPath + contents.navPath;
+
+           book.loadXml(book.settings.navUrl).
+            then(function(navHtml){
+                return parse.nav(navHtml); // Grab Table of Contents
+            }).then(function(toc){
+              book.toc = book.contents.toc = toc;
+              book.ready.toc.resolve(book.contents.toc);
+            });
+
+				 } else if(contents.tocPath) {
 
 				 	 book.settings.tocUrl = book.settings.contentsPath + contents.tocPath;
 
@@ -211,9 +223,9 @@ EPUBJS.Book.prototype.unpack = function(containerPath){
 					 // book.saveSettings();
 					});
 
-				 } else {
+				} else {
 					 book.ready.toc.resolve(false);
-				 }
+				}
 
 			 }).
 			 fail(function(error) {

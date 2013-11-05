@@ -10,7 +10,7 @@ EPUBJS.Hooks.register("beforeChapterDisplay").mathml = function(callback, render
         renderer.doc.body.appendChild(s);
 
         // add MathJax.js to renderer head
-        EPUBJS.core.addScript('/libs/mathjax/MathJax.js', null, renderer.doc.head);
+        EPUBJS.core.addScript("http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML", null, renderer.doc.head);
     }
     if(callback) callback();
 }
